@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
@@ -11,25 +12,23 @@ import javafx.scene.input.MouseEvent;
 public class HelloController {
 
     @FXML
-    private Pane drawingCanvas;
-
-    @FXML
     private Canvas actualDrawingCanvas;
 
+    @FXML
+    private Slider sizeSlider;
+
     private boolean penDown = false;
-    private double brushSize = 1;
+    private double brushSize = 5;
     private Color currentColor = Color.BLACK;
     private GraphicsContext gc;
+    private double lastX, lastY;
 
 
     @FXML
     public void initialize() {
-//        drawingCanvas.setOnMouseMoved(event -> {
-//            double x = event.getX(); // X relative to the Pane
-//            double y = event.getY(); // Y relative to the Pane
-//            //System.out.println("Mouse at: " + x + ", " + y);
-//        });
         gc = actualDrawingCanvas.getGraphicsContext2D();
+        gc.setLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+        gc.setLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
 
         // Optional background color
         gc.setFill(Color.WHITE);
@@ -39,15 +38,36 @@ public class HelloController {
         actualDrawingCanvas.setOnMousePressed(this::onMousePressed);
         actualDrawingCanvas.setOnMouseDragged(this::onMouseDragged);
         actualDrawingCanvas.setOnMouseReleased(this::onMouseReleased);
+
+        brushSize = sizeSlider.getValue(); // initial
+        sizeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            brushSize = newVal.doubleValue();
+            System.out.println("Brush size: " + brushSize);
+        });
     }
     private void onMousePressed(MouseEvent e) {
         penDown = true;
-        drawPoint(e.getX(), e.getY());
+        lastX = e.getX();
+        lastY = e.getY();
+
+        gc.setStroke(currentColor);
+        gc.setLineWidth(brushSize);
+
+// Start stroke with a dot
+        gc.strokeLine(lastX, lastY, lastX, lastY);
     }
 
     private void onMouseDragged(MouseEvent e) {
         if (penDown) {
-            drawPoint(e.getX(), e.getY());
+            double x = e.getX();
+            double y = e.getY();
+
+            gc.setStroke(currentColor);
+            gc.setLineWidth(brushSize);
+            gc.strokeLine(lastX, lastY, x, y);   // draw a segment between points
+
+            lastX = x;
+            lastY = y;
         }
     }
 
@@ -55,19 +75,6 @@ public class HelloController {
         penDown = false;
     }
 
-    private void drawPoint(double x, double y) {
-        gc.setFill(currentColor);
-        gc.fillOval(x - brushSize / 2, y - brushSize / 2, brushSize, brushSize);
-    }
-
     // Example: call this from color picker or toolbar
     public void setCurrentColor(Color c) { currentColor = c; }
-    public void setBrushSize(double s) { brushSize = s; }
-    @FXML
-    private Label welcomeText;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
 }
