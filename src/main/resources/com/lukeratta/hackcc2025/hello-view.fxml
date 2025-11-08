@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -10,8 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lukeratta.hackcc2025.HelloController">
    <children>
       <HBox prefHeight="480.0" prefWidth="640.0">
          <children>
@@ -21,12 +22,12 @@
                      <children>
                         <HBox prefHeight="240.0" prefWidth="96.0">
                            <children>
-                              <Slider majorTickUnit="12.0" max="48.0" min="1.0" minorTickCount="6" orientation="VERTICAL" prefHeight="240.0" prefWidth="48.0" showTickMarks="true" snapToTicks="true">
+                              <Slider fx:id="sizeSlider" majorTickUnit="12.0" max="48.0" min="1.0" minorTickCount="6" orientation="VERTICAL" prefHeight="240.0" prefWidth="48.0" showTickMarks="true" snapToTicks="true">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
                                  <padding>
-                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                                    <Insets bottom="8.0" left="22.0" right="8.0" top="8.0" />
                                  </padding>
                               </Slider>
                               <GridPane>
@@ -67,23 +68,46 @@
                               <Insets />
                            </VBox.margin>
                            <children>
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="4" />
-                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                   <Image url="@images/Green.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                                   <Image url="@images/Yellow.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+                                   <Image url="@images/Orange.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                   <Image url="@images/Red.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
+                                   <Image url="@images/Purple.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                   <Image url="@images/Blue.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3">
+                                   <Image url="@images/Black.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                   <Image url="@images/White.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="4">
+                                   <Image url="@images/Rainbow.png"/>
+                               </ImageView>
+                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                   <Image url="@images/Eyedrop.png"/>
+                               </ImageView>
                            </children>
                         </GridPane>
                      </children>
                   </VBox>
                </children>
             </Pane>
-            <Pane fx:id="DrawingCanvas" prefHeight="480.0" prefWidth="544.0" />
+            <Pane fx:id="drawingCanvas" prefHeight="480.0" prefWidth="544.0">
+               <children>
+                  <Canvas fx:id="actualDrawingCanvas" height="480.0" width="544.0" />
+               </children></Pane>
          </children>
       </HBox>
    </children>

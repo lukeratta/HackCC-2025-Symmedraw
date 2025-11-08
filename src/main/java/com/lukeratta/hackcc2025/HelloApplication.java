@@ -13,7 +13,9 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 640, 480);
         stage.setMinWidth(640);
-        stage.setMinHeight(480);
+        stage.setMinHeight(508);
+        stage.setMaxWidth(640);
+        stage.setMaxHeight(508);
 
         stage.setTitle("Symmedraw");
         stage.setScene(scene);
