@@ -5,17 +5,31 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.stage.FileChooser;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class HelloController {
+
+    @FXML
+    private Pane drawingCanvas;
 
     @FXML
     private Canvas actualDrawingCanvas;
 
     @FXML
     private Slider sizeSlider;
+    @FXML
+
+    private ImageView mirror; // fx:id="mirror" in your FXML
 
     private boolean penDown = false;
     private double brushSize = 5;
@@ -23,6 +37,48 @@ public class HelloController {
     private GraphicsContext gc;
     private double lastX, lastY;
 
+    private double[] cartesianToPolar(double[] cartesian) {
+        double[] polar = new double[2];
+        if (cartesian[0] < 0) {
+            polar[1] = Math.PI;
+        }
+        else {
+            polar[1] = 0;
+        }
+        polar[0] = Math.sqrt(Math.pow(cartesian[1], 2) + Math.pow(cartesian[0], 2));
+        if (cartesian[0] == 0) {
+            cartesian[0] = 0.00001;
+        }
+        polar[1] += Math.atan(cartesian[1] / cartesian[0]);
+        return polar;
+
+    }
+    private double[] polarToCartesian(double[] polar) {
+        double[] cartesian = new double[2];
+        cartesian[0] = polar[0] * Math.cos(polar[1]);
+        cartesian[1] = polar[0] * Math.sin(polar[1]);
+        return cartesian;
+    }
+
+    public void saveCanvasAsPNG(File file) {
+        try {
+            // Take a snapshot of the canvas
+            javafx.scene.image.WritableImage image =
+                    new javafx.scene.image.WritableImage(
+                            (int) actualDrawingCanvas.getWidth(), (int) actualDrawingCanvas.getHeight());
+            actualDrawingCanvas.snapshot(null, image);
+
+            // Convert to BufferedImage for ImageIO
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+
+            // Write the file
+            ImageIO.write(bufferedImage, "png", file);
+            System.out.println("✅ Saved to: " + file.getAbsolutePath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -73,6 +129,16 @@ public class HelloController {
 
     private void onMouseReleased(MouseEvent e) {
         penDown = false;
+    }
+
+    @FXML
+    private void onSaveClicked() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Save Drawing");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("PNG Image", "*.png"));
+        File file = chooser.showSaveDialog(drawingCanvas.getScene().getWindow());
+        if (file != null) saveCanvasAsPNG(file);
     }
 
     // Example: call this from color picker or toolbar
