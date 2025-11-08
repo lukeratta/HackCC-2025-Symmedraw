@@ -35,6 +35,7 @@ public class HelloController {
     private Color currentColor = Color.BLACK;
     private GraphicsContext gc;
     private double lastX, lastY;
+    private boolean rainbowEnabled = false;
 
     private double[] cartesianToPolar(double[] cartesian) {
         double[] polar = new double[2];
@@ -111,16 +112,16 @@ public class HelloController {
         mirrorSpinner.setEditable(true);
         mirrorSpinner.setPrefWidth(100);
 
-// Put spinner in a menu item that doesn’t auto-hide
+        // Put spinner in a menu item that doesn’t auto-hide
         CustomMenuItem spinnerItem = new CustomMenuItem(mirrorSpinner, false);
         mirrorMenu.getItems().setAll(spinnerItem);
 
-// Show the popup when the mirror icon is clicked
+        // Show the popup when the mirror icon is clicked
         mirror.setOnMouseClicked(e ->
                 mirrorMenu.show(mirror, e.getScreenX(), e.getScreenY())
         );
 
-// When the user presses Enter or moves focus away, apply and close
+        // When the user presses Enter or moves focus away, apply and close
         mirrorSpinner.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
             if (!isNowFocused) {
                 applyMirror(mirrorSpinner.getValue());
@@ -143,7 +144,7 @@ public class HelloController {
         gc.setStroke(currentColor);
         gc.setLineWidth(brushSize);
 
-// Start stroke with a dot
+        // Start stroke with a dot
         gc.strokeLine(lastX, lastY, lastX, lastY);
     }
 
@@ -174,6 +175,23 @@ public class HelloController {
         File file = chooser.showSaveDialog(drawingCanvas.getScene().getWindow());
         if (file != null) saveCanvasAsPNG(file);
     }
+
+    @FXML
+    private void setColorToRed() { setCurrentColor(new Color(0.878, 0.227, 0.243, 1.0)); }
+    @FXML
+    private void setColorToOrange() { setCurrentColor(new Color(0.961, 0.510, 0.122, 1.0)); }
+    @FXML
+    private void setColorToYellow() { setCurrentColor(new Color(0.992, 0.722, 0.153, 1.0)); }
+    @FXML
+    private void setColorToGreen() { setCurrentColor(new Color(0.38, 0.733, 0.275, 1.0)); }
+    @FXML
+    private void setColorToBlue() { setCurrentColor(new Color(0.000, 0.616, 0.863, 1.0)); }
+    @FXML
+    private void setColorToPurple() { setCurrentColor(new Color(0.588, 0.239, 0.592, 1.0)); }
+    @FXML
+    private void setColorToWhite() { setCurrentColor(new Color(1.0, 1.0, 1.0, 1.0)); }
+    @FXML
+    private void setColorToBlack() { setCurrentColor(new Color(0.0, 0.0, 0.0, 1.0)); }
 
     // Example: call this from color picker or toolbar
     public void setCurrentColor(Color c) { currentColor = c; }

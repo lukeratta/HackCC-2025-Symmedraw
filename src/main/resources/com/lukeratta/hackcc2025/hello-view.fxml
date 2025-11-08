@@ -47,7 +47,7 @@
                                     <ImageView fx:id="pencil" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                         <Image url="@images/Pencil.png" />
                                     </ImageView>
-                                    <ImageView fx:id="eraser" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+                                    <ImageView fx:id="eraser" fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToWhite" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
                                         <Image url="@images/Eraser.png" />
                                     </ImageView>
                                     <ImageView fx:id="mirror" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
@@ -76,28 +76,28 @@
                               <Insets />
                            </VBox.margin>
                            <children>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToGreen" pickOnBounds="true" preserveRatio="true">
                                    <Image url="@images/Green.png" />
                                </ImageView>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToYellow" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                                    <Image url="@images/Yellow.png" />
                                </ImageView>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToOrange" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
                                    <Image url="@images/Orange.png" />
                                </ImageView>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToRed" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                    <Image url="@images/Red.png" />
                                </ImageView>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToPurple" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
                                    <Image url="@images/Purple.png" />
                                </ImageView>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToBlue" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                    <Image url="@images/Blue.png" />
                                </ImageView>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3">
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToWhite" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3">
                                    <Image url="@images/White.png" />
                                </ImageView>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToBlack" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                    <Image url="@images/Black.png" />
                                </ImageView>
                                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="4">
