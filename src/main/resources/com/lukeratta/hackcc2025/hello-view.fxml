@@ -95,10 +95,10 @@
                                    <Image url="@images/Blue.png" />
                                </ImageView>
                                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3">
-                                   <Image url="@images/Black.png" />
+                                   <Image url="@images/White.png" />
                                </ImageView>
                                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                   <Image url="@images/White.png" />
+                                   <Image url="@images/Black.png" />
                                </ImageView>
                                <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="4">
                                    <Image url="@images/Rainbow.png" />

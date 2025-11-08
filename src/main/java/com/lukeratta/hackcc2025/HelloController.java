@@ -3,8 +3,7 @@ package com.lukeratta.hackcc2025;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -60,6 +59,11 @@ public class HelloController {
         return cartesian;
     }
 
+    private void applyMirror(double value) {
+        // TODO: hook into your mirror logic
+        System.out.println("Mirror value = " + value);
+    }
+
     public void saveCanvasAsPNG(File file) {
         try {
             // Take a snapshot of the canvas
@@ -100,6 +104,36 @@ public class HelloController {
             brushSize = newVal.doubleValue();
             System.out.println("Brush size: " + brushSize);
         });
+
+        // --- Mirror popup spinner setup ---
+        ContextMenu mirrorMenu = new ContextMenu();
+        Spinner<Integer> mirrorSpinner = new Spinner<>(2, 100, 2, 1);
+        mirrorSpinner.setEditable(true);
+        mirrorSpinner.setPrefWidth(100);
+
+// Put spinner in a menu item that doesn’t auto-hide
+        CustomMenuItem spinnerItem = new CustomMenuItem(mirrorSpinner, false);
+        mirrorMenu.getItems().setAll(spinnerItem);
+
+// Show the popup when the mirror icon is clicked
+        mirror.setOnMouseClicked(e ->
+                mirrorMenu.show(mirror, e.getScreenX(), e.getScreenY())
+        );
+
+// When the user presses Enter or moves focus away, apply and close
+        mirrorSpinner.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                applyMirror(mirrorSpinner.getValue());
+                mirrorMenu.hide();
+            }
+        });
+
+        mirrorSpinner.valueProperty().addListener((obs, oldVal, newVal) -> {
+            // Optional: live update while they scroll the spinner
+            applyMirror(newVal);
+        });
+
+
     }
     private void onMousePressed(MouseEvent e) {
         penDown = true;
