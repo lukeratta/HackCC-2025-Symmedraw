@@ -1,4 +1,4 @@
-#Symmedraw (HackCC 2025 Submission)
+# Symmedraw - (HackCC 2025 Submission)
 
 Symmedraw is a drawing application with the following features:
 - A pencil
