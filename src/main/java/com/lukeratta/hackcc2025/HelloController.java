@@ -1,16 +1,21 @@
 package com.lukeratta.hackcc2025;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
-
+import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,16 +31,22 @@ public class HelloController {
 
     @FXML
     private Slider sizeSlider;
-    @FXML
 
+    @FXML
     private ImageView mirror; // fx:id="mirror" in your FXML
 
+    @FXML
+    private ImageView rainbow;
+
     private boolean penDown = false;
-    private double brushSize = 5;
+    private double brushSize = 12;
     private Color currentColor = Color.BLACK;
     private GraphicsContext gc;
     private double lastX, lastY;
     private boolean rainbowEnabled = false;
+    private Timeline hueCycle;
+    private ColorAdjust colorAdjust;
+
 
     private double[] cartesianToPolar(double[] cartesian) {
         double[] polar = new double[2];
@@ -134,7 +145,42 @@ public class HelloController {
             applyMirror(newVal);
         });
 
+        colorAdjust = new ColorAdjust();
+        rainbow.setEffect(colorAdjust);
 
+        // Animate hue from -1 to +1 (full sweep), then back
+        hueCycle = new Timeline(
+                new KeyFrame(Duration.ZERO,        new KeyValue(colorAdjust.hueProperty(), -1)),
+                new KeyFrame(Duration.seconds(3),  new KeyValue(colorAdjust.hueProperty(),  1))
+        );
+        hueCycle.setAutoReverse(false);
+        hueCycle.setCycleCount(Animation.INDEFINITE);
+
+        colorAdjust = new ColorAdjust();
+        rainbow.setEffect(colorAdjust);
+
+// Animate hue from 0 → 1 and wrap back to 0 for smooth rollover
+        hueCycle = new Timeline(
+                new KeyFrame(Duration.ZERO,       new KeyValue(colorAdjust.hueProperty(), -1)),
+                new KeyFrame(Duration.seconds(3), new KeyValue(colorAdjust.hueProperty(),  1))
+        );
+        hueCycle.setAutoReverse(false);
+        hueCycle.setCycleCount(Animation.INDEFINITE);
+
+// When hovering, fade in from hue 0 to the current animation smoothly
+        rainbow.setOnMouseEntered(e -> {
+            if (hueCycle.getStatus() == Animation.Status.STOPPED) {
+                // Map current hue (-1..1) to timeline fraction (0..1) and jump there
+                double h = colorAdjust.getHue();          // likely 0 on first run
+                double frac = (h + 1.0) / 2.0;            // -1..1 -> 0..1
+                hueCycle.jumpTo(Duration.seconds(3 * frac));
+            }
+            if (hueCycle.getStatus() != Animation.Status.RUNNING) {
+                hueCycle.play();                          // resume without resetting
+            }
+        });
+
+        rainbow.setOnMouseExited(e -> hueCycle.pause());
     }
     private void onMousePressed(MouseEvent e) {
         penDown = true;
@@ -193,6 +239,11 @@ public class HelloController {
     @FXML
     private void setColorToBlack() { setCurrentColor(new Color(0.0, 0.0, 0.0, 1.0)); }
 
+    @FXML
+    private void clearCanvas() {
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, actualDrawingCanvas.getWidth(), actualDrawingCanvas.getHeight());
+    }
     // Example: call this from color picker or toolbar
     public void setCurrentColor(Color c) { currentColor = c; }
 }
