@@ -248,7 +248,6 @@ public class HelloController {
         penDown = true;
         lastX = e.getX();
         lastY = e.getY();
-        boolean hasLast = true;
 
         Color brush = rainbowMode ? nextRainbowColor() : currentColor;
         gc.setStroke(brush);
