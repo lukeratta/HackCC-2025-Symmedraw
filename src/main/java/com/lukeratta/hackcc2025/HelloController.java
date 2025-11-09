@@ -283,6 +283,10 @@ public class HelloController {
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, actualDrawingCanvas.getWidth(), actualDrawingCanvas.getHeight());
     }
+    @FXML
+    private void disableSymmetry() {
+        symmetry = 1;
+    }
     // Example: call this from color picker or toolbar
     public void setCurrentColor(Color c) { currentColor = c; }
 }
