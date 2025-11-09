@@ -14,8 +14,6 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 640, 480);
         stage.setMinWidth(640);
         stage.setMinHeight(508);
-//        stage.setMaxWidth(640);
-//        stage.setMaxHeight(508);
 
         HelloController controller = fxmlLoader.getController();
         controller.attachResizeListener(stage);

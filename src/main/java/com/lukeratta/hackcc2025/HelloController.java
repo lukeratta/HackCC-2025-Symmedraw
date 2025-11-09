@@ -50,16 +50,16 @@ public class HelloController {
     private Timeline hueCycle;
     private ColorAdjust colorAdjust;
     private int symmetry = 2;
-    private boolean hasLast = false;
     private boolean rainbowMode = false;
     private long rainbowT0Nanos = 0L;
-    private double rainbowSpeedDegPerSec = 180.0; // 180°/s = full cycle in ~2 seconds
     private double oldWidth = 0;
     private double oldHeight = 0;
 
     private Color nextRainbowColor() {
         long now = System.nanoTime();
         double seconds = (now - rainbowT0Nanos) / 1_000_000_000.0;
+        // 180°/s = full cycle in ~2 seconds
+        double rainbowSpeedDegPerSec = 180.0;
         double hue = (seconds * rainbowSpeedDegPerSec) % 360.0;
         if (hue < 0) hue += 360.0;
         return Color.hsb(hue, 1.0, 1.0);
@@ -149,6 +149,7 @@ public class HelloController {
             System.out.println("✅ Saved to: " + file.getAbsolutePath());
 
         } catch (IOException e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
     }
@@ -247,7 +248,7 @@ public class HelloController {
         penDown = true;
         lastX = e.getX();
         lastY = e.getY();
-        hasLast = true;
+        boolean hasLast = true;
 
         Color brush = rainbowMode ? nextRainbowColor() : currentColor;
         gc.setStroke(brush);
