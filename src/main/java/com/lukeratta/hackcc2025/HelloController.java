@@ -48,7 +48,18 @@ public class HelloController {
     private ColorAdjust colorAdjust;
     private int symmetry = 2;
     private boolean hasLast = false;
+    private boolean rainbowMode = false;
+    private long rainbowT0Nanos = 0L;
+    /** Degrees of hue per second; tweak for faster/slower cycling */
+    private double rainbowSpeedDegPerSec = 180.0; // 180°/s = full cycle in ~2 seconds
 
+    private Color nextRainbowColor() {
+        long now = System.nanoTime();
+        double seconds = (now - rainbowT0Nanos) / 1_000_000_000.0;
+        double hue = (seconds * rainbowSpeedDegPerSec) % 360.0;
+        if (hue < 0) hue += 360.0;
+        return Color.hsb(hue, 1.0, 1.0);
+    }
 
     private double[] cartesianToPolar(double[] cartesian) {
         double[] polar = new double[2];
@@ -216,9 +227,11 @@ public class HelloController {
         lastY = e.getY();
         hasLast = true;
 
-        gc.setStroke(currentColor);
+        Color brush = rainbowMode ? nextRainbowColor() : currentColor;
+        gc.setStroke(brush);
         gc.setLineWidth(brushSize);
-
+        gc.setStroke(brush);
+        gc.setFill(brush);
         // Start stroke with a dot
         gc.strokeLine(lastX, lastY, lastX, lastY);
     }
@@ -228,7 +241,8 @@ public class HelloController {
             double x = e.getX();
             double y = e.getY();
 
-            gc.setStroke(currentColor);
+            Color brush = rainbowMode ? nextRainbowColor() : currentColor;
+            gc.setStroke(brush);
             gc.setLineWidth(brushSize);
             gc.strokeLine(lastX, lastY, x, y);   // draw a segment between points
 
@@ -262,21 +276,23 @@ public class HelloController {
     }
 
     @FXML
-    private void setColorToRed() { setCurrentColor(new Color(0.878, 0.227, 0.243, 1.0)); }
+    private void setColorToRed() { setCurrentColor(new Color(0.878, 0.227, 0.243, 1.0)); rainbowMode = false; }
     @FXML
-    private void setColorToOrange() { setCurrentColor(new Color(0.961, 0.510, 0.122, 1.0)); }
+    private void setColorToOrange() { setCurrentColor(new Color(0.961, 0.510, 0.122, 1.0)); rainbowMode = false; }
     @FXML
-    private void setColorToYellow() { setCurrentColor(new Color(0.992, 0.722, 0.153, 1.0)); }
+    private void setColorToYellow() { setCurrentColor(new Color(0.992, 0.722, 0.153, 1.0)); rainbowMode = false; }
     @FXML
-    private void setColorToGreen() { setCurrentColor(new Color(0.38, 0.733, 0.275, 1.0)); }
+    private void setColorToGreen() { setCurrentColor(new Color(0.38, 0.733, 0.275, 1.0)); rainbowMode = false; }
     @FXML
-    private void setColorToBlue() { setCurrentColor(new Color(0.000, 0.616, 0.863, 1.0)); }
+    private void setColorToBlue() { setCurrentColor(new Color(0.000, 0.616, 0.863, 1.0)); rainbowMode = false; }
     @FXML
-    private void setColorToPurple() { setCurrentColor(new Color(0.588, 0.239, 0.592, 1.0)); }
+    private void setColorToPurple() { setCurrentColor(new Color(0.588, 0.239, 0.592, 1.0)); rainbowMode = false; }
     @FXML
-    private void setColorToWhite() { setCurrentColor(new Color(1.0, 1.0, 1.0, 1.0)); }
+    private void setColorToWhite() { setCurrentColor(new Color(1.0, 1.0, 1.0, 1.0)); rainbowMode = false; }
     @FXML
-    private void setColorToBlack() { setCurrentColor(new Color(0.0, 0.0, 0.0, 1.0)); }
+    private void setColorToGrey() { setCurrentColor(new Color(0.3, 0.3, 0.3, 1.0)); rainbowMode = false; }
+    @FXML
+    private void setColorToBlack() { setCurrentColor(new Color(0.0, 0.0, 0.0, 1.0)); rainbowMode = false; }
 
     @FXML
     private void clearCanvas() {
@@ -287,6 +303,12 @@ public class HelloController {
     private void disableSymmetry() {
         symmetry = 1;
     }
+    @FXML
+    private void enableRainbowMode() {
+        rainbowMode = true;
+        rainbowT0Nanos = System.nanoTime();
+    }
+
     // Example: call this from color picker or toolbar
     public void setCurrentColor(Color c) { currentColor = c; }
 }

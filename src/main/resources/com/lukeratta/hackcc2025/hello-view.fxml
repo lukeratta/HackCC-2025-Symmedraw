@@ -100,11 +100,11 @@
                                <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToBlack" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                    <Image url="@images/Black.png" />
                                </ImageView>
-                               <ImageView fx:id="rainbow" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="4">
+                               <ImageView fx:id="rainbow" fitHeight="48.0" fitWidth="48.0" onMousePressed="#enableRainbowMode" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="4">
                                    <Image url="@images/Rainbow.png" />
                                </ImageView>
-                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                   <Image url="@images/Eyedrop.png" />
+                               <ImageView fitHeight="48.0" fitWidth="48.0" onMousePressed="#setColorToGrey" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                   <Image url="@images/Grey.png" />
                                </ImageView>
                            </children>
                         </GridPane>
