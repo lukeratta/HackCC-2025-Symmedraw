@@ -10,11 +10,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.input.MouseEvent;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -37,6 +38,9 @@ public class HelloController {
 
     @FXML
     private ImageView rainbow;
+
+    @FXML
+    private HBox mainHBox;
 
     private boolean penDown = false;
     private double brushSize = 12;
@@ -110,9 +114,38 @@ public class HelloController {
     }
 
     private void applyMirror(double value) {
-        // TODO: hook into your mirror logic
         symmetry = (int) value;
         System.out.println("Mirror value = " + value);
+    }
+
+    public void attachResizeListener(Stage stage) {
+        // Fire once now so sizes are correct on first show
+        resizeToStage(stage);
+
+        // Resize continuously as the window changes
+        stage.widthProperty().addListener((obs, ov, nv) -> resizeToStage(stage));
+        stage.heightProperty().addListener((obs, ov, nv) -> resizeToStage(stage));
+    }
+
+    private void resizeToStage(Stage stage) {
+        if (stage.getScene() == null) return; // safety
+
+        // Use scene size so we don't count window decorations
+        double w = Math.max(0, stage.getScene().getWidth()) - 96;
+        double h = Math.max(0, stage.getScene().getHeight());
+
+        // Pane grows
+//        drawingCanvas.setPrefWidth(w);
+//        drawingCanvas.setPrefHeight(h);
+
+        // The pixel Canvas must be resized explicitly
+        actualDrawingCanvas.setWidth(w);
+        actualDrawingCanvas.setHeight(h);
+
+        // Optional: clear or redraw background so newly exposed pixels aren’t transparent
+        // (remove this if you prefer to preserve strokes exactly)
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, w, h);
     }
 
     public void saveCanvasAsPNG(File file) {
@@ -220,6 +253,10 @@ public class HelloController {
         });
 
         rainbow.setOnMouseExited(e -> hueCycle.pause());
+
+        
+
+
     }
     private void onMousePressed(MouseEvent e) {
         penDown = true;
