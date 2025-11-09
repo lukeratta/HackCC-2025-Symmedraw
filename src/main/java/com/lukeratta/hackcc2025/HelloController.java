@@ -46,6 +46,8 @@ public class HelloController {
     private boolean rainbowEnabled = false;
     private Timeline hueCycle;
     private ColorAdjust colorAdjust;
+    private int symmetry = 2;
+    private boolean hasLast = false;
 
 
     private double[] cartesianToPolar(double[] cartesian) {
@@ -71,8 +73,34 @@ public class HelloController {
         return cartesian;
     }
 
+    private static void drawSymmetricSegment(GraphicsContext g,
+                                             double centerX, double centerY,
+                                             int symmetry,
+                                             double x0, double y0,
+                                             double x1, double y1) {
+        if (symmetry <= 0) return;
+
+        // Work in coordinates relative to the center
+        double ax = x0 - centerX, ay = y0 - centerY;
+        double bx = x1 - centerX, by = y1 - centerY;
+
+        for (int k = 0; k < symmetry; k++) {
+            double angle = 2.0 * Math.PI * k / symmetry;
+            double cos = Math.cos(angle), sin = Math.sin(angle);
+
+            double rax =  ax * cos - ay * sin;
+            double ray =  ax * sin + ay * cos;
+            double rbx =  bx * cos - by * sin;
+            double rby =  bx * sin + by * cos;
+
+            g.strokeLine(centerX + rax, centerY + ray,
+                    centerX + rbx, centerY + rby);
+        }
+    }
+
     private void applyMirror(double value) {
         // TODO: hook into your mirror logic
+        symmetry = (int) value;
         System.out.println("Mirror value = " + value);
     }
 
@@ -186,6 +214,7 @@ public class HelloController {
         penDown = true;
         lastX = e.getX();
         lastY = e.getY();
+        hasLast = true;
 
         gc.setStroke(currentColor);
         gc.setLineWidth(brushSize);
@@ -202,6 +231,16 @@ public class HelloController {
             gc.setStroke(currentColor);
             gc.setLineWidth(brushSize);
             gc.strokeLine(lastX, lastY, x, y);   // draw a segment between points
+
+            GraphicsContext g = gc; // assuming you already have gc = actualDrawingCanvas.getGraphicsContext2D()
+            // keep your existing stroke settings (color, line width, caps) before drawing:
+            // e.g., g.setStroke(currentColor); g.setLineWidth(sizeSlider.getValue());
+
+            double cx = actualDrawingCanvas.getWidth()  * 0.5;
+            double cy = actualDrawingCanvas.getHeight() * 0.5;
+
+            drawSymmetricSegment(g, cx, cy, Math.max(1, symmetry), lastX, lastY, x, y);
+
 
             lastX = x;
             lastY = y;
