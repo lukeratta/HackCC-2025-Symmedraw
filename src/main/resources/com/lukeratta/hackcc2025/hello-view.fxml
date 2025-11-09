@@ -115,7 +115,7 @@
             </Pane>
             <Canvas fx:id="actualDrawingCanvas" height="480.0" width="544.0">
                <cursor>
-                  <Cursor fx:constant="CROSSHAIR" />
+                  <Cursor fx:constant="DEFAULT" />
                </cursor></Canvas>
          </children>
       </HBox>

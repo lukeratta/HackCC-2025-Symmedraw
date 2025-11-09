@@ -47,15 +47,15 @@ public class HelloController {
     private Color currentColor = Color.BLACK;
     private GraphicsContext gc;
     private double lastX, lastY;
-    private boolean rainbowEnabled = false;
     private Timeline hueCycle;
     private ColorAdjust colorAdjust;
     private int symmetry = 2;
     private boolean hasLast = false;
     private boolean rainbowMode = false;
     private long rainbowT0Nanos = 0L;
-    /** Degrees of hue per second; tweak for faster/slower cycling */
     private double rainbowSpeedDegPerSec = 180.0; // 180°/s = full cycle in ~2 seconds
+    private double oldWidth = 0;
+    private double oldHeight = 0;
 
     private Color nextRainbowColor() {
         long now = System.nanoTime();
@@ -63,29 +63,6 @@ public class HelloController {
         double hue = (seconds * rainbowSpeedDegPerSec) % 360.0;
         if (hue < 0) hue += 360.0;
         return Color.hsb(hue, 1.0, 1.0);
-    }
-
-    private double[] cartesianToPolar(double[] cartesian) {
-        double[] polar = new double[2];
-        if (cartesian[0] < 0) {
-            polar[1] = Math.PI;
-        }
-        else {
-            polar[1] = 0;
-        }
-        polar[0] = Math.sqrt(Math.pow(cartesian[1], 2) + Math.pow(cartesian[0], 2));
-        if (cartesian[0] == 0) {
-            cartesian[0] = 0.00001;
-        }
-        polar[1] += Math.atan(cartesian[1] / cartesian[0]);
-        return polar;
-
-    }
-    private double[] polarToCartesian(double[] polar) {
-        double[] cartesian = new double[2];
-        cartesian[0] = polar[0] * Math.cos(polar[1]);
-        cartesian[1] = polar[0] * Math.sin(polar[1]);
-        return cartesian;
     }
 
     private static void drawSymmetricSegment(GraphicsContext g,
@@ -128,24 +105,32 @@ public class HelloController {
     }
 
     private void resizeToStage(Stage stage) {
-        if (stage.getScene() == null) return; // safety
+        if (stage.getScene() == null) return;
 
-        // Use scene size so we don't count window decorations
         double w = Math.max(0, stage.getScene().getWidth()) - 96;
         double h = Math.max(0, stage.getScene().getHeight());
 
-        // Pane grows
-//        drawingCanvas.setPrefWidth(w);
-//        drawingCanvas.setPrefHeight(h);
+        double prevW = oldWidth;
+        double prevH = oldHeight;
 
-        // The pixel Canvas must be resized explicitly
         actualDrawingCanvas.setWidth(w);
         actualDrawingCanvas.setHeight(h);
 
-        // Optional: clear or redraw background so newly exposed pixels aren’t transparent
-        // (remove this if you prefer to preserve strokes exactly)
+        // Fill only the new areas
         gc.setFill(Color.WHITE);
-        gc.fillRect(0, 0, w, h);
+
+        // Right extension
+        if (w > prevW) {
+            gc.fillRect(prevW, 0, w - prevW, h);
+        }
+
+        // Bottom extension
+        if (h > prevH) {
+            gc.fillRect(0, prevH, w, h - prevH);
+        }
+
+        oldWidth = w;
+        oldHeight = h;
     }
 
     public void saveCanvasAsPNG(File file) {
@@ -254,7 +239,7 @@ public class HelloController {
 
         rainbow.setOnMouseExited(e -> hueCycle.pause());
 
-        
+
 
 
     }
