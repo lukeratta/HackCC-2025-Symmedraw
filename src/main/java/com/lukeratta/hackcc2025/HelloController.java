@@ -24,8 +24,8 @@ import java.io.IOException;
 
 public class HelloController {
 
-    @FXML
-    private Pane drawingCanvas;
+//    @FXML
+//    private Pane drawingCanvas;
 
     @FXML
     private Canvas actualDrawingCanvas;
@@ -293,7 +293,7 @@ public class HelloController {
         chooser.setTitle("Save Drawing");
         chooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("PNG Image", "*.png"));
-        File file = chooser.showSaveDialog(drawingCanvas.getScene().getWindow());
+        File file = chooser.showSaveDialog(actualDrawingCanvas.getScene().getWindow());
         if (file != null) saveCanvasAsPNG(file);
     }
 
